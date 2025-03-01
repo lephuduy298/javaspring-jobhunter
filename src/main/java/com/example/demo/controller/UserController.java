@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
 import com.example.demo.service.UserService;
-import com.example.demo.service.error.IdInvalidException;
+import com.example.demo.util.error.IdInvalidException;
 
 import java.util.List;
 import java.util.Optional;

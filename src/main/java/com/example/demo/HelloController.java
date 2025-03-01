@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.service.error.IdInvalidException;
+import com.example.demo.util.error.IdInvalidException;
 
 @RestController
 public class HelloController {

@@ -49,4 +49,9 @@ public class UserService {
 
     }
 
+    public User fetchUserByEmail(String username) {
+        // TODO Auto-generated method stub
+        return this.userRepository.findByEmail(username);
+    }
+
 }
