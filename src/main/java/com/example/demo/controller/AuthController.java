@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.dto.LoginDTO;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class AuthController {
 
@@ -20,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginDTO> login(@RequestBody LoginDTO loginDto) {
+    public ResponseEntity<LoginDTO> login(@Valid @RequestBody LoginDTO loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(), loginDto.getPassword());
         // xác thực người dùng => cần viết hàm loadUserByUsername
