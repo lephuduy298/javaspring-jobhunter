@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.dto.LoginDTO;
+import com.example.demo.domain.dto.RestLoginDTO;
+import com.example.demo.util.SecurityUtil;
 
 import jakarta.validation.Valid;
 
@@ -16,17 +18,23 @@ import jakarta.validation.Valid;
 public class AuthController {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final SecurityUtil securityUtil;
 
-    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.securityUtil = securityUtil;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginDTO> login(@Valid @RequestBody LoginDTO loginDto) {
+    public ResponseEntity<RestLoginDTO> login(@Valid @RequestBody LoginDTO loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(), loginDto.getPassword());
         // xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return ResponseEntity.ok().body(loginDto);
+
+        String access_Token = this.securityUtil.createToken(authentication);
+        RestLoginDTO restLoginDTO = new RestLoginDTO();
+        restLoginDTO.setAccessToken(access_Token);
+        return ResponseEntity.ok().body(restLoginDTO);
     }
 }
