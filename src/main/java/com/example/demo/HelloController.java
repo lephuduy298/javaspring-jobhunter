@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.util.error.IdInvalidException;
 
-// @RestController
-// public class HelloController {
-//     @GetMapping("/")
-//     public String getHelloPage() // throws IdInvalidException
-//     {
-//         // if (true)
-//         // throw new IdInvalidException("check valid exception");
-//         return "Hello World Spring";
-//     }
-// }
-
 @RestController
 public class HelloController {
     @GetMapping("/")
-    public Map<String, String> getHelloPage() {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Hello World Spring");
-        return response;
+    public String getHelloPage() // throws IdInvalidException
+    {
+        // if (true)
+        // throw new IdInvalidException("check valid exception");
+        return "Hello World Spring";
     }
 }
+
+// @RestController
+// public class HelloController {
+// @GetMapping("/")
+// public Map<String, String> getHelloPage() {
+// Map<String, String> response = new HashMap<>();
+// response.put("message", "Hello World Spring");
+// return response;
+// }
+// }
