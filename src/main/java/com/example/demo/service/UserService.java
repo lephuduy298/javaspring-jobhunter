@@ -3,9 +3,13 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.User;
+import com.example.demo.domain.dto.Meta;
+import com.example.demo.domain.dto.ResultPaginationDTO;
 import com.example.demo.repository.UserRepository;
 
 @Service
@@ -33,8 +37,21 @@ public class UserService {
         return null;
     }
 
-    public List<User> fetchAllUser() {
-        return this.userRepository.findAll();
+    public ResultPaginationDTO fetchAllUser(Pageable pageable) {
+        Page<User> userPages = this.userRepository.findAll(pageable);
+        List<User> listUsers = userPages.getContent();
+
+        Meta mt = new Meta();
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+
+        mt.setPage(userPages.getNumber());
+        mt.setPageSize(userPages.getSize());
+        mt.setPages(userPages.getTotalPages());
+        mt.setTotal(userPages.getTotalElements());
+
+        rs.setMeta(mt);
+        rs.setResult(listUsers);
+        return rs;
     }
 
     public User handleUpdateUser(User newUser) {

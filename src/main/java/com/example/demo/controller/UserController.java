@@ -3,12 +3,15 @@ package com.example.demo.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
+import com.example.demo.domain.dto.ResultPaginationDTO;
 import com.example.demo.service.UserService;
 import com.example.demo.util.error.IdInvalidException;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,10 +64,18 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = this.userService.fetchAllUser();
-        return ResponseEntity.ok(users);
-        // return ResponseEntity.status(HttpStatus.OK).body(users);
+    public ResponseEntity<ResultPaginationDTO> getAllUsers(
+            @RequestParam("current") Optional<String> currentOptional,
+            @RequestParam("pageSize") Optional<String> pageSizeOptional) {
+        String sCurrent = currentOptional.isPresent() ? currentOptional.get() : "";
+        String sPageSize = pageSizeOptional.isPresent() ? pageSizeOptional.get() : "";
+
+        int current = Integer.parseInt(sCurrent);
+        int pageSize = Integer.parseInt(sPageSize);
+
+        Pageable pageable = PageRequest.of(current - 1, pageSize);
+
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(pageable));
     }
 
     @PutMapping("/users")
