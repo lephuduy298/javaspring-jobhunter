@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.Company;
@@ -34,20 +35,18 @@ public class CompanyService {
 
     }
 
-    public ResultPaginationDTO fetchAllCompany(Pageable pageable) {
+    public ResultPaginationDTO fetchAllCompany(Specification<Company> spec, Pageable pageable) {
         // TODO Auto-generated method stub
-        Page<Company> companyPage = this.companyRepository.findAll(pageable);
-        List<Company> listCompanies = companyPage.getContent();
-
+        Page<Company> companyPage = this.companyRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta mt = new Meta();
-        mt.setPage(companyPage.getNumber());
+        mt.setPage(companyPage.getNumber() + 1);
         mt.setPageSize(companyPage.getSize());
         mt.setPages(companyPage.getTotalPages());
         mt.setTotal(companyPage.getTotalElements());
 
         rs.setMeta(mt);
-        rs.setResult(listCompanies);
+        rs.setResult(companyPage.getContent());
         return rs;
     }
 
