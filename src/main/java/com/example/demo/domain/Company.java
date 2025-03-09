@@ -50,9 +50,9 @@ public class Company {
 
     @PreUpdate
     public void handleBeforeUpdate() {
-        String currentName = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get()
+        this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        Instant currentTime = Instant.now();
+        this.updateAt = Instant.now();
 
     }
 
