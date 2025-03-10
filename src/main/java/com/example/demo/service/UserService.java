@@ -137,4 +137,13 @@ public class UserService {
         return res;
     }
 
+    public void updateUserToken(String token, String email) {
+        // TODO Auto-generated method stub
+        User currentUser = this.userRepository.findByEmail(email);
+        if (currentUser != null) {
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+        }
+    }
+
 }
