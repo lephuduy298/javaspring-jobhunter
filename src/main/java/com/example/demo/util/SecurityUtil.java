@@ -39,7 +39,7 @@ public class SecurityUtil {
     @Value("${lephuduy.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(ResLoginDTO.UserLogin userLogin) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
@@ -47,8 +47,8 @@ public class SecurityUtil {
         JwtClaimsSet claims = JwtClaimsSet.builder() 
             .issuedAt(now) 
             .expiresAt(validity) 
-            .subject(authentication.getName()) 
-            .claim("lephuduy", authentication) 
+            .subject(userLogin.getEmail()) 
+            .claim("lephuduy", userLogin) 
             .build(); 
  
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build(); 
