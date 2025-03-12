@@ -146,4 +146,9 @@ public class UserService {
         }
     }
 
+    public User getUserByRefreshTokenAndEmail(String refresh_token, String email) {
+        // TODO Auto-generated method stub
+        return this.userRepository.findByRefreshTokenAndEmail(refresh_token, email);
+    }
+
 }
