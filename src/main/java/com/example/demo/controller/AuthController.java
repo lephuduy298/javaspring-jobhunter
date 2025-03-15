@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.function.ObjLongConsumer;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -61,9 +63,9 @@ public class AuthController {
         User currentUser = this.userService.fetchUserByEmail(loginDto.getUsername());
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getName(),
                 currentUser.getEmail());
-        resLoginDTO.setUserLogin(userLogin);
+        resLoginDTO.setUser(userLogin);
 
-        String access_Token = this.securityUtil.createAccessToken(loginDto.getUsername(), resLoginDTO.getUserLogin());
+        String access_Token = this.securityUtil.createAccessToken(loginDto.getUsername(), resLoginDTO.getUser());
 
         resLoginDTO.setAccessToken(access_Token);
 
@@ -85,17 +87,19 @@ public class AuthController {
 
     @GetMapping("/auth/account")
     @ApiMessage("get account")
-    public ResponseEntity<ResLoginDTO.UserLogin> getAccount() {
+    public ResponseEntity<ResLoginDTO.UserGetAccount> getAccount() {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
         User currentUser = this.userService.fetchUserByEmail(email);
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin();
+        ResLoginDTO.UserGetAccount userGetAccount = new ResLoginDTO.UserGetAccount();
         if (currentUser != null) {
             userLogin.setId(currentUser.getId());
             userLogin.setEmail(currentUser.getEmail());
             userLogin.setName(currentUser.getName());
+            userGetAccount.setUser(userLogin);
         }
-        return ResponseEntity.ok().body(userLogin);
+        return ResponseEntity.ok().body(userGetAccount);
     }
 
     @GetMapping("/auth/refresh")
@@ -124,9 +128,9 @@ public class AuthController {
         User currentUserDB = this.userService.fetchUserByEmail(email);
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUserDB.getId(), currentUserDB.getName(),
                 currentUserDB.getEmail());
-        resLoginDTO.setUserLogin(userLogin);
+        resLoginDTO.setUser(userLogin);
 
-        String access_Token = this.securityUtil.createAccessToken(email, resLoginDTO.getUserLogin());
+        String access_Token = this.securityUtil.createAccessToken(email, resLoginDTO.getUser());
 
         resLoginDTO.setAccessToken(access_Token);
 
@@ -144,5 +148,34 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, springCookie.toString())
                 .body(resLoginDTO);
+    }
+
+    @PostMapping("/auth/logout")
+    @ApiMessage("Logout User")
+    public ResponseEntity<Void> logout() throws IdInvalidException {
+
+        String email = securityUtil.getCurrentUserLogin().isPresent() ? securityUtil.getCurrentUserLogin().get() : "";
+        if (email.equals("")) {
+            throw new IdInvalidException("Access token không hợp lệ");
+        }
+
+        // get user
+        User user = this.userService.fetchUserByEmail(email);
+
+        // update token trong database
+        this.userService.updateUserToken(null, email);
+        // xóa token
+        ResponseCookie deleteSpringCookie = ResponseCookie
+                .from("refresh_token", null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
+                .body(null);
     }
 }
