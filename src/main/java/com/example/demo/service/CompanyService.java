@@ -62,4 +62,9 @@ public class CompanyService {
         }
         return null;
     }
+
+    public Optional<Company> fetchById(long id) {
+        // TODO Auto-generated method stub
+        return this.companyRepository.findById(id);
+    }
 }
