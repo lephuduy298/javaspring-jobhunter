@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.Company;
-import com.example.demo.domain.dto.ResultPaginationDTO;
+import com.example.demo.domain.dto.response.ResultPaginationDTO;
 import com.example.demo.repository.CompanyRepository;
 
 import jakarta.validation.Valid;

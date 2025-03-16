@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Company;
-import com.example.demo.domain.dto.ResultPaginationDTO;
+import com.example.demo.domain.dto.response.ResultPaginationDTO;
 import com.example.demo.repository.CompanyRepository;
 import com.example.demo.service.CompanyService;
 import com.example.demo.util.annotation.ApiMessage;

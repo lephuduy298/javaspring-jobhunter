@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
-import com.example.demo.domain.dto.ReqLoginDTO;
-import com.example.demo.domain.dto.ResLoginDTO;
+import com.example.demo.domain.dto.request.ReqLoginDTO;
+import com.example.demo.domain.dto.response.ResLoginDTO;
 import com.example.demo.service.UserService;
 import com.example.demo.util.SecurityUtil;
 import com.example.demo.util.annotation.ApiMessage;
