@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.User;
-import com.example.demo.domain.dto.Meta;
 import com.example.demo.domain.dto.ResCreateUserDTO;
 import com.example.demo.domain.dto.ResUpdateUserDTO;
 import com.example.demo.domain.dto.ResUserDTO;
@@ -45,7 +44,7 @@ public class UserService {
 
     public ResultPaginationDTO fetchAllUser(Specification<User> spec, Pageable pageable) {
         Page<User> userPages = this.userRepository.findAll(spec, pageable);
-        Meta mt = new Meta();
+        ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
         ResultPaginationDTO rs = new ResultPaginationDTO();
 
         mt.setPage(userPages.getNumber() + 1);
