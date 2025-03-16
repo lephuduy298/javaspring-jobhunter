@@ -63,8 +63,8 @@ public class UserService {
                         item.getAge(),
                         item.getGender(),
                         item.getAddress(),
-                        item.getCreateAt(),
-                        item.getUpdateAt()))
+                        item.getCreatedAt(),
+                        item.getUpdatedAt()))
                 .collect(Collectors.toList());
         rs.setResult(listUserDTO);
         return rs;
@@ -107,7 +107,7 @@ public class UserService {
         res.setAddress(newUser.getAddress());
         res.setAge(newUser.getAge());
         res.setGender(newUser.getGender());
-        res.setCreateAt(newUser.getCreateAt());
+        res.setCreatedAt(newUser.getCreatedAt());
         return res;
     }
 
@@ -120,7 +120,7 @@ public class UserService {
         res.setAddress(newUser.getAddress());
         res.setAge(newUser.getAge());
         res.setGender(newUser.getGender());
-        res.setUpdateAt(newUser.getUpdateAt());
+        res.setUpdatedAt(newUser.getUpdatedAt());
         return res;
     }
 
@@ -132,8 +132,8 @@ public class UserService {
         res.setAddress(newUser.getAddress());
         res.setAge(newUser.getAge());
         res.setGender(newUser.getGender());
-        res.setUpdateAt(newUser.getUpdateAt());
-        res.setCreateAt(newUser.getCreateAt());
+        res.setUpdatedAt(newUser.getUpdatedAt());
+        res.setCreatedAt(newUser.getCreatedAt());
         return res;
     }
 

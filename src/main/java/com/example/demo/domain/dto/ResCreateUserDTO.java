@@ -16,5 +16,13 @@ public class ResCreateUserDTO {
     private int age;
     private GenderEnum gender;
     private String address;
-    private Instant createAt;
+    private Instant createdAt;
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
 }
