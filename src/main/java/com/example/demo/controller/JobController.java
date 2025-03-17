@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.query.named.ResultMappingMementoNode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Job;
 import com.example.demo.domain.Skill;
+import com.example.demo.domain.dto.response.ResultPaginationDTO;
+import com.example.demo.domain.dto.response.job.ResCreateJobDTO;
+import com.example.demo.domain.dto.response.job.ResUpdateJobDTO;
 import com.example.demo.service.JobService;
 import com.example.demo.util.annotation.ApiMessage;
 import com.example.demo.util.error.IdInvalidException;
@@ -40,16 +44,16 @@ public class JobController {
 
     @PostMapping("/jobs")
     @ApiMessage("create a job")
-    public ResponseEntity<Job> createAJob(@Valid @RequestBody Job job) {
-        Job newJob = this.jobService.handleSaveJob(job);
-        return ResponseEntity.created(null).body(newJob);
+    public ResponseEntity<ResCreateJobDTO> createAJob(@Valid @RequestBody Job job) {
+        ResCreateJobDTO resCreateJobDTO = this.jobService.handleSaveJob(job);
+        return ResponseEntity.created(null).body(resCreateJobDTO);
     }
 
     @PutMapping("/jobs")
     @ApiMessage("update a job")
-    public ResponseEntity<Job> updateJob(@Valid @RequestBody Job job) throws IdInvalidException {
+    public ResponseEntity<ResUpdateJobDTO> updateJob(@Valid @RequestBody Job job) throws IdInvalidException {
         boolean isExistJob = this.jobService.existJob(job.getId());
-        if (isExistJob) {
+        if (!isExistJob) {
             throw new IdInvalidException("Job với id=" + job.getId() + " không tồn tại");
         }
         return ResponseEntity.ok().body(this.jobService.handleUpdateJob(job));
@@ -83,10 +87,9 @@ public class JobController {
 
     @GetMapping("/jobs")
     @ApiMessage("get all job")
-    public ResponseEntity<List<Job>> fetchAllJob(@Filter Specification<Job> spec,
+    public ResponseEntity<ResultPaginationDTO> fetchAllJob(@Filter Specification<Job> spec,
             Pageable pageable) {
-        Page<Job> jobs = this.jobService.getAllJob(spec, pageable);
-        List<Job> listJobs = jobs.getContent();
-        return ResponseEntity.ok().body(listJobs);
+
+        return ResponseEntity.ok().body(this.jobService.getAllJob(spec, pageable));
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.controller.SkillController;
 import com.example.demo.domain.Skill;
 import com.example.demo.domain.User;
+import com.example.demo.domain.dto.response.ResultPaginationDTO;
 import com.example.demo.repository.SkillRepository;
 
 import jakarta.validation.Valid;
@@ -25,39 +26,56 @@ public class SkillService {
     }
 
     public Skill handleSaveSkill(Skill skill) {
-        // TODO Auto-generated method stub
         return this.skillRepository.save(skill);
     }
 
     public Skill handleUpdateSkill(Skill skill) {
-        // TODO Auto-generated method stub
-        Optional<Skill> updateSkillOptional = this.skillRepository.findById(skill.getId());
-        if (updateSkillOptional.isPresent()) {
-            Skill updateSkill = updateSkillOptional.get();
-            updateSkill.setName(skill.getName());
-            return this.skillRepository.save(updateSkill);
-        }
-        return null;
+        return this.skillRepository.save(skill);
     }
 
     public boolean existSkill(String name) {
-        // TODO Auto-generated method stub
         return this.skillRepository.existsByName(name);
     }
 
     public List<Skill> getAllSkill() {
-        // TODO Auto-generated method stub
         return this.skillRepository.findAll();
     }
 
-    public Page<Skill> getAllSkill(Specification<Skill> spec, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return this.skillRepository.findAll(spec, pageable);
+    public ResultPaginationDTO fetchAllSkill(Specification<Skill> spec, Pageable pageable) {
+        Page<Skill> skills = this.skillRepository.findAll(spec, pageable);
+
+        ResultPaginationDTO result = new ResultPaginationDTO();
+        ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
+
+        meta.setPage(skills.getNumber() + 1);
+        meta.setPageSize(skills.getSize());
+        meta.setPages(skills.getTotalPages());
+        meta.setTotal(skills.getTotalElements());
+
+        result.setResult(skills.getContent());
+        result.setMeta(meta);
+
+        return result;
     }
 
     public List<Skill> getIdIn(List<Long> listIds) {
-        // TODO Auto-generated method stub
         return this.skillRepository.findByIdIn(listIds);
+    }
+
+    public Optional<Skill> findById(long id) {
+        return this.skillRepository.findById(id);
+    }
+
+    public boolean existSkillById(Long id) {
+        return this.skillRepository.existsById(id);
+    }
+
+    public void handleDeleteSkill(Long id) {
+        Optional<Skill> skillOptional = this.skillRepository.findById(id);
+        Skill currentSkill = skillOptional.get();
+        currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+
+        this.skillRepository.delete(currentSkill);
     }
 
 }
