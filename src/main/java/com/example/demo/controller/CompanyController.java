@@ -24,6 +24,7 @@ import com.example.demo.domain.dto.response.ResultPaginationDTO;
 import com.example.demo.repository.CompanyRepository;
 import com.example.demo.service.CompanyService;
 import com.example.demo.util.annotation.ApiMessage;
+import com.example.demo.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.persistence.criteria.CriteriaBuilder.In;
@@ -67,5 +68,16 @@ public class CompanyController {
             Pageable pageable) {
 
         return ResponseEntity.status(HttpStatus.OK).body(this.companyService.fetchAllCompany(spec, pageable));
+    }
+
+    @GetMapping("/companies/{id}")
+    @ApiMessage("fetch all company")
+    public ResponseEntity<Company> fetchACompany(@PathVariable("id") long id) throws IdInvalidException {
+        Optional<Company> comOptional = this.companyService.fetchById(id);
+        if (!comOptional.isPresent()) {
+            throw new IdInvalidException("Company id không hợp lệ");
+        }
+        Company com = comOptional.get();
+        return ResponseEntity.status(HttpStatus.OK).body(com);
     }
 }

@@ -56,7 +56,9 @@ public class JobController {
         if (!isExistJob) {
             throw new IdInvalidException("Job với id=" + job.getId() + " không tồn tại");
         }
-        return ResponseEntity.ok().body(this.jobService.handleUpdateJob(job));
+
+        Optional<Job> jobDBOptional = this.jobService.findById(job.getId());
+        return ResponseEntity.ok().body(this.jobService.handleUpdateJob(job, jobDBOptional.get()));
     }
 
     @DeleteMapping("/jobs/{id}")

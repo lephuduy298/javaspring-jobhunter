@@ -71,7 +71,7 @@ public class ResumeController {
 
     @PutMapping("/resumes")
     @ApiMessage("update a resume")
-    public ResponseEntity<ResUpdateResumeDTO> updateResume(@Valid @RequestBody Resume resume)
+    public ResponseEntity<ResUpdateResumeDTO> updateResume(@RequestBody Resume resume)
             throws IdInvalidException {
         // check resume
         boolean existResume = this.resumeService.isExistResume(resume.getId());
