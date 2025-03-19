@@ -16,18 +16,23 @@ import com.example.demo.domain.dto.response.ResCreateUserDTO;
 import com.example.demo.domain.dto.response.ResUpdateUserDTO;
 import com.example.demo.domain.dto.response.ResUserDTO;
 import com.example.demo.domain.dto.response.ResultPaginationDTO;
+import com.example.demo.repository.CompanyRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
 public class UserService {
 
+    private final CompanyRepository companyRepository;
+
     private final UserRepository userRepository;
 
     private final CompanyService companyService;
 
-    public UserService(UserRepository userRepository, CompanyService companyService) {
+    public UserService(UserRepository userRepository, CompanyService companyService,
+            CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.companyService = companyService;
+        this.companyRepository = companyRepository;
     }
 
     public User handleSaveUser(User user) {
@@ -107,22 +112,18 @@ public class UserService {
     }
 
     public User fetchUserByEmail(String username) {
-        // TODO Auto-generated method stub
         return this.userRepository.findByEmail(username);
     }
 
     public List<User> fetchAllUser() {
-        // TODO Auto-generated method stub
         return this.userRepository.findAll();
     }
 
     public boolean isExistEmail(String email) {
-        // TODO Auto-generated method stub
         return this.userRepository.existsByEmail(email);
     }
 
     public ResCreateUserDTO convertToResCreateUserDTO(User newUser) {
-        // TODO Auto-generated method stub
         ResCreateUserDTO res = new ResCreateUserDTO();
         ResCreateUserDTO.CompanyUser com = new ResCreateUserDTO.CompanyUser();
         res.setId(newUser.getId());
@@ -141,7 +142,6 @@ public class UserService {
     }
 
     public ResUpdateUserDTO convertToResUpdateUserDTO(User newUser) {
-        // TODO Auto-generated method stub
         ResUpdateUserDTO res = new ResUpdateUserDTO();
         ResUpdateUserDTO.CompanyUser com = new ResUpdateUserDTO.CompanyUser();
 
@@ -181,7 +181,6 @@ public class UserService {
     }
 
     public void updateUserToken(String token, String email) {
-        // TODO Auto-generated method stub
         User currentUser = this.userRepository.findByEmail(email);
         if (currentUser != null) {
             currentUser.setRefreshToken(token);
@@ -190,13 +189,15 @@ public class UserService {
     }
 
     public User getUserByRefreshTokenAndEmail(String refresh_token, String email) {
-        // TODO Auto-generated method stub
         return this.userRepository.findByRefreshTokenAndEmail(refresh_token, email);
     }
 
     public boolean isExistCompany(long companyId) {
-        // TODO Auto-generated method stub
-        return this.userRepository.existsById(companyId);
+        return this.companyRepository.existsById(companyId);
+    }
+
+    public boolean isExistUser(long id) {
+        return this.userRepository.existsById(id);
     }
 
 }

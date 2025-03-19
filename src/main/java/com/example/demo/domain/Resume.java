@@ -1,17 +1,13 @@
 package com.example.demo.domain;
 
 import java.time.Instant;
-import java.util.List;
 
 import com.example.demo.util.SecurityUtil;
-import com.example.demo.util.constant.GenderEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.demo.util.constant.ResumeStatusEnum;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,42 +22,34 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user")
+@Table(name = "resumes")
 @Getter
 @Setter
-public class User {
+public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
-
     @NotBlank(message = "email không được để trống")
     private String email;
 
-    @NotBlank(message = "password không được để trống")
-    private String password;
-
-    private int age;
+    @NotBlank(message = "link url không được để trống (upload cv chưa thành công    )")
+    private String url;
 
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
-    private String address;
-
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String refreshToken;
+    private ResumeStatusEnum status;
     private Instant createdAt;
-    private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+    private Instant updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @JoinColumn(name = "job_id")
+    private Job job;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Resume> resumes;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PrePersist
     public void handleBeforeSave() {
@@ -76,5 +64,4 @@ public class User {
         this.updatedAt = Instant.now();
 
     }
-
 }

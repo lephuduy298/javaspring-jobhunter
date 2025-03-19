@@ -111,27 +111,22 @@ public class JobService {
     }
 
     public Optional<Job> findById(long id) {
-        // TODO Auto-generated method stub
         return this.jobRepository.findById(id);
     }
 
     public void handleDeleteJob(long id) {
-        // TODO Auto-generated method stub
         this.jobRepository.deleteById(id);
     }
 
-    public boolean existJob(long id) {
-        // TODO Auto-generated method stub
+    public boolean isExistJob(long id) {
         return this.jobRepository.existsById(id);
     }
 
     public Optional<Job> getJobById(Long id) {
-        // TODO Auto-generated method stub
         return this.jobRepository.findById(id);
     }
 
     public ResultPaginationDTO getAllJob(Specification<Job> spec, Pageable pageable) {
-        // TODO Auto-generated method stub
         Page<Job> jobPage = this.jobRepository.findAll(spec, pageable);
 
         ResultPaginationDTO result = new ResultPaginationDTO();

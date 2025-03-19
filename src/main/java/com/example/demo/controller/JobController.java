@@ -52,7 +52,7 @@ public class JobController {
     @PutMapping("/jobs")
     @ApiMessage("update a job")
     public ResponseEntity<ResUpdateJobDTO> updateJob(@Valid @RequestBody Job job) throws IdInvalidException {
-        boolean isExistJob = this.jobService.existJob(job.getId());
+        boolean isExistJob = this.jobService.isExistJob(job.getId());
         if (!isExistJob) {
             throw new IdInvalidException("Job với id=" + job.getId() + " không tồn tại");
         }
@@ -62,7 +62,7 @@ public class JobController {
     @DeleteMapping("/jobs/{id}")
     @ApiMessage("delete a job")
     public ResponseEntity<Job> deleteAJob(@Valid @PathVariable("id") Long id) throws IdInvalidException {
-        boolean isExistJob = this.jobService.existJob(id);
+        boolean isExistJob = this.jobService.isExistJob(id);
         if (!isExistJob) {
             throw new IdInvalidException("Job với id=" + id + " không tồn tại");
         }
@@ -73,7 +73,7 @@ public class JobController {
     @GetMapping("/jobs/{id}")
     @ApiMessage("get a job")
     public ResponseEntity<Job> getAJob(@Valid @PathVariable("id") Long id) throws IdInvalidException {
-        boolean isExistJob = this.jobService.existJob(id);
+        boolean isExistJob = this.jobService.isExistJob(id);
         if (!isExistJob) {
             throw new IdInvalidException("Job với id=" + id + " không tồn tại");
         }
