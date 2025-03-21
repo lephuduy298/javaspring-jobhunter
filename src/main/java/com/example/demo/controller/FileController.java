@@ -76,7 +76,7 @@ public class FileController {
 
     @GetMapping("/files")
     @ApiMessage("download a file")
-    public ResponseEntity<Resource> hanldeDownloadFile(
+    public ResponseEntity<Resource> handleDownloadFile(
             @RequestParam(name = "folder", required = false) String folder,
             @RequestParam(name = "fileName", required = false) String fileName)
             throws StorageException, URISyntaxException, FileNotFoundException {
