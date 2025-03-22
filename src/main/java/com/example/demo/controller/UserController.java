@@ -50,11 +50,12 @@ public class UserController {
 
     // @GetMapping("/users/create")
     @PostMapping("/users")
+    @ApiMessage("Create a user")
     public ResponseEntity<ResCreateUserDTO> createUser(@Valid @RequestBody User user) throws IdInvalidException {
 
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
-        List<User> users = this.userService.fetchAllUser();
+        // List<User> users = this.userService.fetchAllUser();
         boolean isExist = this.userService.isExistEmail(user.getEmail());
         if (isExist) {
             throw new IdInvalidException("Email " + user.getEmail() + " đã tồn tại, vui lòng sử dụng email khác!!!");

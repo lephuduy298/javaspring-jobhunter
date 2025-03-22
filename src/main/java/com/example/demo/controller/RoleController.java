@@ -59,11 +59,12 @@ public class RoleController {
         }
 
         // kiểm tra tên trùng lặp
-        boolean existRoleByName = this.roleService.existRoleName(role.getName());
+        // boolean existRoleByName = this.roleService.existRoleName(role.getName());
 
-        if (existRoleByName) {
-            throw new IdInvalidException("Role với tên " + role.getName() + " đã tồn tại");
-        }
+        // if (existRoleByName) {
+        // throw new IdInvalidException("Role với tên " + role.getName() + " đã tồn
+        // tại");
+        // }
 
         return ResponseEntity.created(null).body(this.roleService.handleUpdateRole(role, existRoleById.get()));
     }

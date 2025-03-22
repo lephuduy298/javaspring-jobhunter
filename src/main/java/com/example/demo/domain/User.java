@@ -63,6 +63,10 @@ public class User {
     @JsonIgnore
     private List<Resume> resumes;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     @PrePersist
     public void handleBeforeSave() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";

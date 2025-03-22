@@ -40,10 +40,7 @@ public class PermissionController {
     public ResponseEntity<Permission> createAPermission(@Valid @RequestBody Permission permission)
             throws IdInvalidException {
         // check exist permission
-        boolean existPermission = this.permissionService.isExistByApiPathAndMethodAndModule(
-                permission.getApiPath(),
-                permission.getMethod(),
-                permission.getModule());
+        boolean existPermission = this.permissionService.isExistPermission(permission);
 
         if (existPermission) {
             throw new IdInvalidException("permission đã tồn tại. vui lòng thử lại");
@@ -64,17 +61,14 @@ public class PermissionController {
             throw new IdInvalidException("Permission với id=" + permission.getId() + " không tồn tại");
         }
         // check exist permission
-        boolean existPermission = this.permissionService.isExistByApiPathAndMethodAndModule(
-                permission.getApiPath(),
-                permission.getMethod(),
-                permission.getModule());
+        boolean existPermission = this.permissionService.isExistPermission(permission);
 
         if (existPermission) {
             throw new IdInvalidException("permission đã tồn tại. vui lòng thử lại");
         }
 
         Permission currentPermission = this.permissionService.handleUpdatePermission(permission, pOptional.get());
-        return ResponseEntity.created(null).body(currentPermission);
+        return ResponseEntity.ok().body(currentPermission);
     }
 
     @GetMapping("/permissions")

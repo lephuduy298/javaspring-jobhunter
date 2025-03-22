@@ -38,6 +38,7 @@ public class PermissionService {
     }
 
     public Permission handleUpdatePermission(Permission permission, Permission permissionDB) {
+        permissionDB.setName(permission.getName());
         permissionDB.setApiPath(permission.getApiPath());
         permissionDB.setMethod(permission.getMethod());
         permissionDB.setModule(permission.getModule());
@@ -69,6 +70,13 @@ public class PermissionService {
     public void deleteAPermission(Permission permission) {
         permission.getRoles().forEach(role -> role.getPermissions().remove(permission));
         this.permissionRepository.deleteById(permission.getId());
+    }
+
+    public boolean isExistPermission(Permission permission) {
+        return this.permissionRepository.existsByApiPathAndMethodAndModule(
+                permission.getApiPath(),
+                permission.getMethod(),
+                permission.getModule());
     }
 
 }

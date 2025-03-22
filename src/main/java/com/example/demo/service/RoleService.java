@@ -62,6 +62,7 @@ public class RoleService {
             roleInDB.setPermissions(listPermissions);
         }
         roleInDB.setName(role.getName());
+        roleInDB.setDescription(role.getDescription());
         roleInDB.setCreatedBy(role.getDescription());
         roleInDB.setActive(role.isActive());
 

@@ -1,5 +1,6 @@
 package com.example.demo.domain.dto.response;
 
+import com.example.demo.domain.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class ResLoginDTO {
         private long id;
         private String name;
         private String email;
+        private Role role;
     }
 
     @Getter
@@ -31,6 +33,16 @@ public class ResLoginDTO {
     @NoArgsConstructor
     public static class UserGetAccount {
         private UserLogin user;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UserInsideToken {
+        private long id;
+        private String name;
+        private String email;
     }
 
 }

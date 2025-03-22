@@ -61,12 +61,15 @@ public class AuthController {
 
                 // lấy user hiện tại
                 User currentUser = this.userService.fetchUserByEmail(loginDto.getUsername());
-                ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getName(),
-                                currentUser.getEmail());
+                ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
+                                currentUser.getId(),
+                                currentUser.getName(),
+                                currentUser.getEmail(),
+                                currentUser.getRole());
                 resLoginDTO.setUser(userLogin);
 
-                String access_Token = this.securityUtil.createAccessToken(loginDto.getUsername(),
-                                resLoginDTO.getUser());
+                String access_Token = this.securityUtil.createAccessToken(authentication.getName(),
+                                resLoginDTO);
 
                 resLoginDTO.setAccessToken(access_Token);
 
@@ -98,6 +101,8 @@ public class AuthController {
                         userLogin.setId(currentUser.getId());
                         userLogin.setEmail(currentUser.getEmail());
                         userLogin.setName(currentUser.getName());
+                        userLogin.setRole(currentUser.getRole());
+
                         userGetAccount.setUser(userLogin);
                 }
                 return ResponseEntity.ok().body(userGetAccount);
@@ -127,12 +132,14 @@ public class AuthController {
 
                 // lấy user hiện tại
                 User currentUserDB = this.userService.fetchUserByEmail(email);
-                ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUserDB.getId(),
+                ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
+                                currentUserDB.getId(),
                                 currentUserDB.getName(),
-                                currentUserDB.getEmail());
+                                currentUserDB.getEmail(),
+                                currentUser.getRole());
                 resLoginDTO.setUser(userLogin);
 
-                String access_Token = this.securityUtil.createAccessToken(email, resLoginDTO.getUser());
+                String access_Token = this.securityUtil.createAccessToken(email, resLoginDTO);
 
                 resLoginDTO.setAccessToken(access_Token);
 
