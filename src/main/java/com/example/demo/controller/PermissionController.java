@@ -62,9 +62,10 @@ public class PermissionController {
         }
         // check exist permission
         boolean existPermission = this.permissionService.isExistPermission(permission);
-
         if (existPermission) {
-            throw new IdInvalidException("permission đã tồn tại. vui lòng thử lại");
+            if (this.permissionService.isSameName(permission)) {
+                throw new IdInvalidException("permission đã tồn tại. vui lòng thử lại");
+            }
         }
 
         Permission currentPermission = this.permissionService.handleUpdatePermission(permission, pOptional.get());

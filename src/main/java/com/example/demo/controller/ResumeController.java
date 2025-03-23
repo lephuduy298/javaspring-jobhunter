@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.domain.Company;
 import com.example.demo.domain.Job;
 import com.example.demo.domain.Resume;
 import com.example.demo.domain.User;
@@ -29,9 +30,14 @@ import com.example.demo.repository.ResumeRepository;
 import com.example.demo.service.JobService;
 import com.example.demo.service.ResumeService;
 import com.example.demo.service.UserService;
+import com.example.demo.util.SecurityUtil;
 import com.example.demo.util.annotation.ApiMessage;
 import com.example.demo.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.node.FilterNode;
 
 import jakarta.validation.Valid;
 
@@ -47,12 +53,19 @@ public class ResumeController {
 
     private final ResumeService resumeService;
 
+    private final FilterSpecificationConverter filterSpecificationConverter;
+
+    private final FilterBuilder filterBuilder;
+
     public ResumeController(UserService userService, JobService jobService, ResumeService resumeService,
-            ResumeRepository resumeRepository) {
+            ResumeRepository resumeRepository, FilterSpecificationConverter filterSpecificationConverter,
+            FilterBuilder filterBuilder) {
         this.userService = userService;
         this.jobService = jobService;
         this.resumeService = resumeService;
         this.resumeRepository = resumeRepository;
+        this.filterBuilder = filterBuilder;
+        this.filterSpecificationConverter = filterSpecificationConverter;
     }
 
     @PostMapping("/resumes")
@@ -124,19 +137,44 @@ public class ResumeController {
 
     @GetMapping("/resumes")
     @ApiMessage("fetch all resume")
-    public ResponseEntity<ResultPaginationDTO> fetchAllUser(
+    public ResponseEntity<ResultPaginationDTO> fetchAllResumeByCompany(
             @Filter Specification<Resume> spec,
             Pageable pageable)
             throws IdInvalidException {
         // fetch all user;
-        return ResponseEntity.ok().body(this.resumeService.getAllResume(spec, pageable));
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+        User currentUser = this.userService.fetchUserByEmail(email);
+
+        List<Long> listJobIds = null;
+
+        // lấy job id thuộc công ty của người dùng hiện tại (người hr)
+        if (currentUser != null) {
+            Company currentCom = currentUser.getCompany();
+            if (currentCom != null) {
+                List<Job> listJobs = currentCom.getJobs();
+                if (listJobs != null) {
+                    listJobIds = listJobs.stream().map(job -> job.getId())
+                            .collect(Collectors.toList());
+                }
+            }
+        }
+
+        FilterNode filterNode = filterBuilder.field("job")
+                .in(filterBuilder.input(listJobIds)).get();
+
+        FilterSpecification<Resume> filterSpec = filterSpecificationConverter.convert(filterNode);
+
+        Specification<Resume> finalSpec = filterSpec.and(spec);
+
+        return ResponseEntity.ok().body(this.resumeService.getAllResume(finalSpec, pageable));
     }
 
     @PostMapping("/resumes/by-user")
     @ApiMessage("get list of resumes by user")
-    public ResponseEntity<ResultPaginationDTO> fetchAllUser(
+    public ResponseEntity<ResultPaginationDTO> fetchAllResumeByUser(
             Pageable pageable) {
         // fetch all user;
         return ResponseEntity.ok().body(this.resumeService.getResumeByUser(pageable));
     }
+
 }

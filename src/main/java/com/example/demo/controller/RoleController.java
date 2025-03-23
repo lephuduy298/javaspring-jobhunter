@@ -66,7 +66,7 @@ public class RoleController {
         // tại");
         // }
 
-        return ResponseEntity.created(null).body(this.roleService.handleUpdateRole(role, existRoleById.get()));
+        return ResponseEntity.ok().body(this.roleService.handleUpdateRole(role, existRoleById.get()));
     }
 
     @GetMapping("/roles")
@@ -86,5 +86,16 @@ public class RoleController {
         }
         this.roleService.deleteARole(existRoleById.get().getId());
         return ResponseEntity.ok().body(null);
+    }
+
+    @GetMapping("/roles/{id}")
+    @ApiMessage("Fetch roles by id")
+    public ResponseEntity<Role> fetchRoleById(@PathVariable("id") long id) throws IdInvalidException {
+        Optional<Role> roleOptional = this.roleService.findRoleById(id);
+
+        if (!roleOptional.isPresent()) {
+            throw new IdInvalidException("role với id=" + id + " không tồn tại");
+        }
+        return ResponseEntity.ok().body(roleOptional.get());
     }
 }

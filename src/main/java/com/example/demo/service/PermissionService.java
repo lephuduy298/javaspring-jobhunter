@@ -79,4 +79,16 @@ public class PermissionService {
                 permission.getModule());
     }
 
+    public boolean isSameName(Permission permission) {
+        Optional<Permission> perInDBOptional = this.permissionRepository.findById(permission.getId());
+        Permission perInDB = perInDBOptional.get();
+
+        // check same name
+        if (perInDB.getName().equals(permission.getName())) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

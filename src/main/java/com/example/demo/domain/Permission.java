@@ -20,12 +20,14 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "permissions")
+@NoArgsConstructor
 public class Permission {
 
     @Id
@@ -65,5 +67,12 @@ public class Permission {
                 : "";
         this.updatedAt = Instant.now();
 
+    }
+
+    public Permission(String name, String apiPath, String method, String module) {
+        this.name = name;
+        this.apiPath = apiPath;
+        this.method = method;
+        this.module = module;
     }
 }
