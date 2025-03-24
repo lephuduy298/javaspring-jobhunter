@@ -82,7 +82,7 @@ public class JobController {
         Optional<Job> newJobOptional = this.jobService.getJobById(id);
         if (newJobOptional.isPresent()) {
             Job newJob = newJobOptional.get();
-            return ResponseEntity.created(null).body(newJob);
+            return ResponseEntity.ok().body(newJob);
         }
         return null;
     }
