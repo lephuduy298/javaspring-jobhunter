@@ -3,14 +3,17 @@ package com.example.demo.domain;
 import java.time.Instant;
 import java.util.List;
 
+import org.hibernate.annotations.ManyToAny;
+
 import com.example.demo.util.SecurityUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -21,26 +24,28 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Table(name = "skills")
+@Table(name = "subscribers")
 @Entity
-public class Skill {
+public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank(message = "tên skill không được bỏ trống")
+
+    @NotBlank(message = "Name không được bỏ trống")
     private String name;
+
+    @NotBlank(message = "Email không được bỏ trống")
+    private String email;
+
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
-    @JsonIgnore
-    private List<Job> jobs;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
-    @JsonIgnore
-    private List<Subscriber> subscribers;
+    @ManyToMany
+    @JoinTable(name = "subscriber_skill", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @JsonIgnoreProperties(value = "subscribers")
+    private List<Skill> skills;
 
     @PrePersist
     public void handleBeforeSave() {
