@@ -3,13 +3,11 @@ package com.example.demo.domain.dto.response;
 import java.time.Instant;
 
 import com.example.demo.util.constant.GenderEnum;
-import com.nimbusds.jose.crypto.impl.PRFParams;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.bytebuddy.asm.Advice.FieldGetterHandle;
 
 @Getter
 @Setter
