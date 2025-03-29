@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Subscriber;
 import com.example.demo.service.SubscriberService;
+import com.example.demo.util.SecurityUtil;
 import com.example.demo.util.annotation.ApiMessage;
 import com.example.demo.util.error.IdInvalidException;
 
@@ -41,5 +42,15 @@ public class SubscriberController {
             throw new IdInvalidException("Subscriber với id=" + sub.getId() + " không tồn tại");
         }
         return ResponseEntity.ok().body(this.subscriberService.handleUpdateSub(currentSub, sub));
+    }
+
+    @PostMapping("/subscribers/skills")
+    @ApiMessage("Get subscriber's skill")
+    public ResponseEntity<Subscriber> getSubscribersSkill() {
+
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+
+        return ResponseEntity.ok().body(this.subscriberService.findSubByEmail(email));
     }
 }
